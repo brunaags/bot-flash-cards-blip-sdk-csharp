@@ -1,0 +1,17 @@
+namespace ConstumedNotificationReceiver
+{
+    using System;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Lime.Protocol;
+    using System.Diagnostics;
+    using Take.Blip.Client;
+    
+    public class ConstumedNotificationReceiver : INotificationReceiver
+    {
+        public async Task ReceiveAsync(Notification notification, CancellationToken cancellationToken)
+        {
+            Console.WriteLine(notification.ToString());
+        }
+    }
+}
