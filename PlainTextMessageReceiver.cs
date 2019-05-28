@@ -1,12 +1,12 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Lime.Protocol;
-using System.Diagnostics;
-using Take.Blip.Client;
-
-namespace bot_flash_cards_blip_sdk_csharp
+﻿namespace bot_flash_cards_blip_sdk_csharp
 {
+    using System;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Lime.Protocol;
+    using System.Diagnostics;
+    using Take.Blip.Client;
+
     /// <summary>
     /// Defines a class for handling messages. 
     /// This type must be registered in the application.json file in the 'messageReceivers' section.
@@ -26,6 +26,8 @@ namespace bot_flash_cards_blip_sdk_csharp
         {
             Trace.TraceInformation($"From: {message.From} \tContent: {message.Content}");
             await _sender.SendMessageAsync("Pong!", message.From, cancellationToken);
+            
+            Console.WriteLine(message.Content.ToString());
         }
     }
 }

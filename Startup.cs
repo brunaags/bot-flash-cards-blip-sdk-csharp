@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Lime.Protocol.Server;
-using Serilog;
-using Serilog.Core;
-using Take.Blip.Client;
-
-namespace bot_flash_cards_blip_sdk_csharp
+﻿namespace bot_flash_cards_blip_sdk_csharp
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Lime.Protocol.Server;
+    using Serilog;
+    using Serilog.Core;
+    using Take.Blip.Client;
+
     /// <summary>
     /// Defines a type that is called once during the application initialization.
     /// </summary>
