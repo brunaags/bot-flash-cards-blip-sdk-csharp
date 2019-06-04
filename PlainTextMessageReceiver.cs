@@ -6,6 +6,7 @@
     using Lime.Protocol;
     using System.Diagnostics;
     using Take.Blip.Client;
+    using Take.Blip.Client.Session;
 
     /// <summary>
     /// Defines a class for handling messages. 
@@ -14,20 +15,24 @@
     public class PlainTextMessageReceiver : IMessageReceiver
     {
         private readonly ISender _sender;
+        
         private readonly Settings _settings;
+        
+        private StateMachine _stateMachine; 
 
-        public PlainTextMessageReceiver(ISender sender, Settings settings)
+        private readonly StateManager _stateManager;
+
+        public PlainTextMessageReceiver(ISender sender, Settings settings, IStateManager stateManager)
         {
             _sender = sender;
             _settings = settings;
+            _stateMachine = new StateMachine(sender, stateManager);
         }
 
         public async Task ReceiveAsync(Message message, CancellationToken cancellationToken)
         {
             Trace.TraceInformation($"From: {message.From} \tContent: {message.Content}");
-            await _sender.SendMessageAsync("Pong!", message.From, cancellationToken);
-            
-            Console.WriteLine(message.Content.ToString());
+            await _stateMachine.RunAsync(message, cancellationToken);
         }
     }
 }
