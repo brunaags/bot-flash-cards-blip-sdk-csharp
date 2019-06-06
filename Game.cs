@@ -31,7 +31,7 @@ namespace bot_flash_cards_blip_sdk_csharp
                 PreviewUri = new Uri(people[person].PreviewUri, UriKind.Absolute)
             };
 
-            _lastAnswer = people[person].Name;
+            _lastAnswer = people[person].Name.ToLower();
             people.RemoveAt(person);
 
             return document;
@@ -39,7 +39,7 @@ namespace bot_flash_cards_blip_sdk_csharp
 
         public void ProccessAnswer(string answer)
         {
-            if (answer == _lastAnswer)
+            if (_lastAnswer.Contains(answer.ToLower()))
                 Result++;                
         }
     }
