@@ -7,6 +7,7 @@
     using System.Diagnostics;
     using Take.Blip.Client;
     using Take.Blip.Client.Session;
+    using Lime.Messaging.Contents;
 
     /// <summary>
     /// Defines a class for handling messages. 
@@ -22,6 +23,8 @@
 
         private readonly StateManager _stateManager;
 
+        private ChatState _chatState = new ChatState { State = ChatStateEvent.Composing };
+
         public PlainTextMessageReceiver(ISender sender, Settings settings, IStateManager stateManager)
         {
             _sender = sender;
@@ -32,7 +35,7 @@
         public async Task ReceiveAsync(Message message, CancellationToken cancellationToken)
         {
             Trace.TraceInformation($"From: {message.From} \tContent: {message.Content}");
-            await _stateMachine.RunAsync(message, cancellationToken);
+            await _stateMachine.RunAsync(message, cancellationToken, _chatState);
         }
     }
 }
