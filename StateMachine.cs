@@ -16,14 +16,13 @@ namespace bot_flash_cards_blip_sdk_csharp
        
         private readonly ISender _sender;
 
-        private readonly Game _game = new Game();
-
-        private List<People> _people;
+        private readonly IDictionary<string, Game> _games;
 
         public StateMachine(ISender sender, IStateManager stateManager)
         {
             _sender = sender;
             _stateManager = stateManager;
+            _games = new Dictionary<string, Game>();
         }
 
         public async Task<string> VerifyStateAsync(Message message, CancellationToken cancellationToken)
@@ -34,11 +33,13 @@ namespace bot_flash_cards_blip_sdk_csharp
 
         public async Task RunAsync(Message message, CancellationToken cancellationToken, ChatState chatState)
         {
+            Game game = _games.ContainsKey(message.From.ToIdentity().ToString()) ? game = _games[message.From.ToIdentity().ToString()] : new Game();
+
             switch (await VerifyStateAsync(message, cancellationToken))
             {
                 case "state-one":
-                    _people = Reader.Run();
-                    _game.Result = 0;
+                    game.people = Reader.Run();
+                    game.Result = 0;
 
                     await _sender.SendMessageAsync(chatState, message.From, cancellationToken);
                     Thread.Sleep(1000);
@@ -52,7 +53,7 @@ namespace bot_flash_cards_blip_sdk_csharp
                 break;
 
                 case "state-two":
-                    _game.Player = message.Content.ToString();
+                    game.Player = message.Content.ToString();
                     
                     await _sender.SendMessageAsync(chatState, message.From, cancellationToken);
                     Thread.Sleep(1000);
@@ -62,28 +63,28 @@ namespace bot_flash_cards_blip_sdk_csharp
                 break;
 
                 case "state-three":
-                    _game.Questions = Convert.ToInt32(message.Content.ToString());
+                    game.Questions = Convert.ToInt32(message.Content.ToString());
 
-                    await _sender.SendMessageAsync(_game.Run(_people), message.From, cancellationToken);
+                    await _sender.SendMessageAsync(game.Run(), message.From, cancellationToken);
 
-                    _game.Questions--;
+                    game.Questions--;
 
                     await _stateManager.SetStateAsync(message.From, "state-four", cancellationToken);
                 break;
 
                 case "state-four":
-                    _game.ProccessAnswer(message.Content.ToString());
+                    game.ProccessAnswer(message.Content.ToString());
 
-                    if (_game.Questions > 0)
+                    if (game.Questions > 0)
                     {
-                        await _sender.SendMessageAsync(_game.Run(_people), message.From, cancellationToken);
-                        _game.Questions--;
+                        await _sender.SendMessageAsync(game.Run(), message.From, cancellationToken);
+                        game.Questions--;
                     }
                     else
                     {
                         await _sender.SendMessageAsync(chatState, message.From, cancellationToken);
                         Thread.Sleep(1000);
-                        await _sender.SendMessageAsync($"Yay! {_game.Player}, your result is: {_game.Result}.", message.From, cancellationToken);
+                        await _sender.SendMessageAsync($"Yay! {game.Player}, your result is: {game.Result}.", message.From, cancellationToken);
 
                         await _stateManager.SetStateAsync(message.From, "state-one", cancellationToken); 
                     }                 
@@ -97,6 +98,8 @@ namespace bot_flash_cards_blip_sdk_csharp
                     await _stateManager.SetStateAsync(message.From, "state-one", cancellationToken);
                 break;
             }
+
+            _games[message.From.ToIdentity().ToString()] = game;
         }
     }
 }

@@ -16,10 +16,12 @@ namespace bot_flash_cards_blip_sdk_csharp
         
         private string _lastAnswer;
 
-        public MediaLink Run(List<People> people)
+        public List<People> people { get; set; }
+
+        public MediaLink Run()
         {
             Random random = new Random();
-            var person = random.Next(0, Questions);
+            var person = random.Next(0, people.Count-1);
 
             var document = new MediaLink
             {
