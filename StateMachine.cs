@@ -24,7 +24,6 @@ namespace bot_flash_cards_blip_sdk_csharp
         {
             _sender = sender;
             _stateManager = stateManager;
-            _people = Reader.Run();
         }
 
         public async Task<string> VerifyStateAsync(Message message, CancellationToken cancellationToken)
@@ -38,6 +37,8 @@ namespace bot_flash_cards_blip_sdk_csharp
             switch (await VerifyStateAsync(message, cancellationToken))
             {
                 case "state-one":
+                    _people = Reader.Run();
+                    _game.Result = 0;
                     await _sender.SendMessageAsync("Hi! Let's start!", message.From, cancellationToken);
                     await _sender.SendMessageAsync("What's your name?", message.From, cancellationToken);
                     await _stateManager.SetStateAsync(message.From, "state-two", cancellationToken);
