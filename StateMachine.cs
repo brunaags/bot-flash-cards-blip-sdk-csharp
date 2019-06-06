@@ -57,19 +57,34 @@ namespace bot_flash_cards_blip_sdk_csharp
                     
                     await _sender.SendMessageAsync(chatState, message.From, cancellationToken);
                     Thread.Sleep(1000);
-                    await _sender.SendMessageAsync("How many questions do you want to your game?", message.From, cancellationToken); 
+                    await _sender.SendMessageAsync($"How many questions do you want to your game? The maximum is {game.people.Count}.", message.From, cancellationToken);
 
                     await _stateManager.SetStateAsync(message.From, "state-three", cancellationToken);
                 break;
 
                 case "state-three":
-                    game.Questions = Convert.ToInt32(message.Content.ToString());
+                    int questions;
 
-                    await _sender.SendMessageAsync(game.Run(), message.From, cancellationToken);
+                    if(Int32.TryParse(message.Content.ToString(), out questions) && questions <= game.people.Count)
+                    {
+                        game.Questions = Convert.ToInt32(message.Content.ToString());
 
-                    game.Questions--;
+                        await _sender.SendMessageAsync(chatState, message.From, cancellationToken);
+                        Thread.Sleep(1000);
+                        await _sender.SendMessageAsync(game.Run(), message.From, cancellationToken);
 
-                    await _stateManager.SetStateAsync(message.From, "state-four", cancellationToken);
+                        game.Questions--;
+
+                        await _stateManager.SetStateAsync(message.From, "state-four", cancellationToken);
+                    }
+                    else
+                    {
+                        await _sender.SendMessageAsync(chatState, message.From, cancellationToken);
+                        Thread.Sleep(1000);
+                        await _sender.SendMessageAsync("Please, enter a valid number.", message.From, cancellationToken);
+
+                        await _stateManager.SetStateAsync(message.From, "state-three", cancellationToken);
+                    }
                 break;
 
                 case "state-four":
@@ -77,7 +92,10 @@ namespace bot_flash_cards_blip_sdk_csharp
 
                     if (game.Questions > 0)
                     {
+                        await _sender.SendMessageAsync(chatState, message.From, cancellationToken);
+                        Thread.Sleep(1000);
                         await _sender.SendMessageAsync(game.Run(), message.From, cancellationToken);
+                        
                         game.Questions--;
                     }
                     else
