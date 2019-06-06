@@ -52,7 +52,7 @@ namespace bot_flash_cards_blip_sdk_csharp
                 break;
 
                 case "state-two":
-                    _game.GamerName = message.Content.ToString();
+                    _game.Player = message.Content.ToString();
                     
                     await _sender.SendMessageAsync(chatState, message.From, cancellationToken);
                     Thread.Sleep(1000);
@@ -83,7 +83,7 @@ namespace bot_flash_cards_blip_sdk_csharp
                     {
                         await _sender.SendMessageAsync(chatState, message.From, cancellationToken);
                         Thread.Sleep(1000);
-                        await _sender.SendMessageAsync($"Yay! {_game.GamerName}, your result is: {_game.Result}.", message.From, cancellationToken);
+                        await _sender.SendMessageAsync($"Yay! {_game.Player}, your result is: {_game.Result}.", message.From, cancellationToken);
 
                         await _stateManager.SetStateAsync(message.From, "state-one", cancellationToken); 
                     }                 

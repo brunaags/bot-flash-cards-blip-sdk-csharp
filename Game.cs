@@ -8,7 +8,7 @@ namespace bot_flash_cards_blip_sdk_csharp
 
     public class Game
     {
-        public string GamerName { get; set; }
+        public string Player { get; set; }
 
         public int Questions { get; set; }
 
