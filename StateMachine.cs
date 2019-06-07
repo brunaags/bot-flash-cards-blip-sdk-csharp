@@ -9,6 +9,9 @@ namespace bot_flash_cards_blip_sdk_csharp
     using System;
     using Lime.Messaging.Contents;
     using System.Collections.Generic;
+    using System.Text;
+    using System.Linq;
+    using System.Globalization;
 
     public class StateMachine
     {
@@ -29,6 +32,17 @@ namespace bot_flash_cards_blip_sdk_csharp
         {
             var currentState = await _stateManager.GetStateAsync(message.From.ToIdentity(), cancellationToken);
             return currentState == "default" ? "state-one" : currentState;
+        }
+
+        // This method was taken from the link https://stackoverflow.com/questions/3288114/what-does-nets-string-normalize-do       
+        public static string RemoveAccents(string input) 
+        {
+            return new string(
+                input
+                .Normalize(System.Text.NormalizationForm.FormD)
+                .ToCharArray()
+                .Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                .ToArray());
         }
 
         public async Task RunAsync(Message message, CancellationToken cancellationToken, ChatState chatState)
@@ -88,7 +102,7 @@ namespace bot_flash_cards_blip_sdk_csharp
                 break;
 
                 case "state-four":
-                    game.ProccessAnswer(message.Content.ToString());
+                    game.ProccessAnswer(RemoveAccents(message.Content.ToString()));
 
                     if (game.Questions > 0)
                     {
