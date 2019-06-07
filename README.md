@@ -22,7 +22,7 @@ Your `application.json` file must looks like:
         "identifier": "your-identifier",
         "accessKey": "your-access-key",
 
-          // other stuffs
+        // other stuffs
 	}
 
  * Create a `.json` file to your flash cards game. In this project, **the file name is** `people.json`.
@@ -43,6 +43,7 @@ The `<name-of-your-cards-file>.json` file must looks like:
             "Uri": "<uri>",
             "PreviewUri": "<previewuri>"
         },
+
         // other objects
     ]
 
