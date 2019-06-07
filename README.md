@@ -14,7 +14,7 @@ A little open source project in flash cards game format.
  * Enable the SDK connection and get the `identifier` and `access key` informations.
  * The identifier and the access key must be inserted in the `application.json` file of your project.
 
-![Connection information](../bot-flash-cards-blip-sdk-csharp/Images/Connection.png)
+![Connection information](/Images/Connection.png)
 
 Your `application.json` file must looks like:
 
@@ -28,7 +28,7 @@ Your `application.json` file must looks like:
  * Create a `.json` file to your flash cards game. In this project, **the file name is** `people.json`.
  * **If you want** to change the name of `.json` file, **you need to change the** `Reader.cs`, **line 11**. You can change the class `People.cs` too.
 
-![Reader](../bot-flash-cards-blip-sdk-csharp/Images/Reader.png)
+![Reader](/Images/Reader.png)
 
 The `<name-of-your-cards-file>.json` file must looks like:
 
