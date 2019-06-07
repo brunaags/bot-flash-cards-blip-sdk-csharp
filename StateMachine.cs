@@ -65,7 +65,7 @@ namespace bot_flash_cards_blip_sdk_csharp
                 case "state-three":
                     int questions;
 
-                    if(Int32.TryParse(message.Content.ToString(), out questions) && questions <= game.people.Count)
+                    if(Int32.TryParse(message.Content.ToString(), out questions) && questions <= game.people.Count && questions > 0)
                     {
                         game.Questions = Convert.ToInt32(message.Content.ToString());
 
