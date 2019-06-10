@@ -52,8 +52,7 @@ namespace bot_flash_cards_blip_sdk_csharp
             switch (await VerifyStateAsync(message, cancellationToken))
             {
                 case "state-one":
-                    game.people = Reader.Run();
-                    game.Result = 0;
+                    game.People = Reader.Run();
 
                     await _sender.SendMessageAsync(chatState, message.From, cancellationToken);
                     Thread.Sleep(1000);
@@ -71,7 +70,7 @@ namespace bot_flash_cards_blip_sdk_csharp
                     
                     await _sender.SendMessageAsync(chatState, message.From, cancellationToken);
                     Thread.Sleep(1000);
-                    await _sender.SendMessageAsync($"How many questions do you want to your game? The maximum is {game.people.Count}.", message.From, cancellationToken);
+                    await _sender.SendMessageAsync($"How many questions do you want to your game? The maximum is {game.People.Count}.", message.From, cancellationToken);
 
                     await _stateManager.SetStateAsync(message.From, "state-three", cancellationToken);
                 break;
@@ -79,7 +78,7 @@ namespace bot_flash_cards_blip_sdk_csharp
                 case "state-three":
                     int questions;
 
-                    if(Int32.TryParse(message.Content.ToString(), out questions) && questions <= game.people.Count && questions > 0)
+                    if(Int32.TryParse(message.Content.ToString(), out questions) && questions <= game.People.Count && questions > 0)
                     {
                         game.Questions = Convert.ToInt32(message.Content.ToString());
 
@@ -116,7 +115,19 @@ namespace bot_flash_cards_blip_sdk_csharp
                     {
                         await _sender.SendMessageAsync(chatState, message.From, cancellationToken);
                         Thread.Sleep(1000);
-                        await _sender.SendMessageAsync($"Yay! {game.Player}, your result is: {game.Result}.", message.From, cancellationToken);
+                        await _sender.SendMessageAsync($"Yay! {game.Player}, your result is: {game.Answers.Count((answer) => answer.IsCorrect)}.", message.From, cancellationToken);
+                        
+                        var result = 
+                            from answer in game.Answers
+                            where !answer.IsCorrect
+                            select answer;
+                        
+                        foreach (var r in result)
+                        {
+                            await _sender.SendMessageAsync(chatState, message.From, cancellationToken);
+                            Thread.Sleep(1000);
+                            await _sender.SendMessageAsync($"You said {r.AnswerName}, but is {r.Person.Name}", message.From, cancellationToken);
+                        }
 
                         await _stateManager.SetStateAsync(message.From, "state-one", cancellationToken); 
                     }                 

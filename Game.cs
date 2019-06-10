@@ -13,12 +13,18 @@ namespace bot_flash_cards_blip_sdk_csharp
         public int Questions { get; set; }
 
         public int Result { get; set; }
-        
+
         public List<Person> People { get; set; }
 
-        public List<People> people { get; set; }
+        public List<Answer> Answers { get; set; }
+        
+        private Person _lastPerson;
 
-        private string _lastPerson;
+        public Game()
+        {
+            Answers = new List<Answer>();
+        }
+
         public MediaLink Run()
         {
             Random random = new Random();
@@ -34,16 +40,22 @@ namespace bot_flash_cards_blip_sdk_csharp
                 PreviewUri = new Uri(People[person].PreviewUri, UriKind.Absolute)
             };
 
-            _lastPerson = People[person].Name.ToLower();
+            _lastPerson = People[person];
             People.RemoveAt(person);
 
             return document;
         }
 
-        public void ProccessAnswer(string answer)
+        public void ProccessAnswer(string answerName)
         {
-            if (_lastAnswer.Contains(answer.ToLower()))
-                Result++;                
+            var isCorrect = false;
+
+            if (_lastPerson.Name.ToLower().Contains(answerName.ToLower()))
+            {
+                isCorrect = true;
+            }
+
+            Answers.Add(new Answer(isCorrect, _lastPerson, answerName));
         }
     }
 }
