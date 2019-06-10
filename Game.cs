@@ -20,11 +20,6 @@ namespace bot_flash_cards_blip_sdk_csharp
         
         private Person _lastPerson;
 
-        public Game()
-        {
-            Answers = new List<Answer>();
-        }
-
         public MediaLink Run()
         {
             Random random = new Random();

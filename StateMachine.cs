@@ -53,6 +53,7 @@ namespace bot_flash_cards_blip_sdk_csharp
             {
                 case "state-one":
                     game.People = Reader.Run();
+                    game.Answers = new List<Answer>();
 
                     await _sender.SendMessageAsync(chatState, message.From, cancellationToken);
                     Thread.Sleep(1000);
