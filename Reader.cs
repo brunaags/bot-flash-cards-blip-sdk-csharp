@@ -6,12 +6,12 @@ namespace bot_flash_cards_blip_sdk_csharp
 
     public static class Reader
     {
-       public static List<People> Run()
+       public static List<Person> Run()
        {
            using (StreamReader reader = new StreamReader("people.json"))
             {
                 var json = reader.ReadToEnd();
-                return JsonConvert.DeserializeObject<List<People>>(json);
+                return JsonConvert.DeserializeObject<List<Person>>(json);
             }
        }
     }

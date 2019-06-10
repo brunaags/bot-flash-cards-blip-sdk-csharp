@@ -14,27 +14,28 @@ namespace bot_flash_cards_blip_sdk_csharp
 
         public int Result { get; set; }
         
-        private string _lastAnswer;
+        public List<Person> People { get; set; }
 
         public List<People> people { get; set; }
 
+        private string _lastPerson;
         public MediaLink Run()
         {
             Random random = new Random();
-            var person = random.Next(0, people.Count-1);
+            var person = random.Next(0, People.Count-1);
 
             var document = new MediaLink
             {
-                Text = people[person].Text,
+                Text = People[person].Text,
                 Type = MediaType.Parse("image/jpeg"),
-                AspectRatio = people[person].AspectRatio,
-                Size = people[person].Size,
-                Uri = new Uri(people[person].Uri, UriKind.Absolute),
-                PreviewUri = new Uri(people[person].PreviewUri, UriKind.Absolute)
+                AspectRatio = People[person].AspectRatio,
+                Size = People[person].Size,
+                Uri = new Uri(People[person].Uri, UriKind.Absolute),
+                PreviewUri = new Uri(People[person].PreviewUri, UriKind.Absolute)
             };
 
-            _lastAnswer = people[person].Name.ToLower();
-            people.RemoveAt(person);
+            _lastPerson = People[person].Name.ToLower();
+            People.RemoveAt(person);
 
             return document;
         }
