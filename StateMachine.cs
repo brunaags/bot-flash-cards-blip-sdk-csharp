@@ -116,19 +116,11 @@ namespace bot_flash_cards_blip_sdk_csharp
                     {
                         await _sender.SendMessageAsync(chatState, message.From, cancellationToken);
                         Thread.Sleep(1000);
-                        await _sender.SendMessageAsync($"Yay! {game.Player}, your result is: {game.Answers.Count((answer) => answer.IsCorrect)}.", message.From, cancellationToken);
-                        
-                        var result = 
-                            from answer in game.Answers
-                            where !answer.IsCorrect
-                            select answer;
-                        
-                        foreach (var r in result)
-                        {
-                            await _sender.SendMessageAsync(chatState, message.From, cancellationToken);
-                            Thread.Sleep(1000);
-                            await _sender.SendMessageAsync($"You said {r.AnswerName}, but is {r.Person.Name}", message.From, cancellationToken);
-                        }
+                        await _sender.SendMessageAsync($"Yay! {game.Player}, your result is: {game.ProccesResult()}.", message.From, cancellationToken);
+                        Thread.Sleep(1000);
+                        await _sender.SendMessageAsync(chatState, message.From, cancellationToken);
+                        Thread.Sleep(1000);
+                        await _sender.SendMessageAsync(game.ShowErros(), message.From, cancellationToken);
 
                         await _stateManager.SetStateAsync(message.From, "state-one", cancellationToken); 
                     }                 
